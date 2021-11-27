@@ -4,6 +4,12 @@ import (
 	"fmt"
 )
 
+type PersonInfo struct {
+	ID      string
+	Name    string
+	Address string
+}
+
 func main() {
 	/**
 	基本数据类型			数据范围
@@ -78,6 +84,73 @@ func main() {
 	fmt.Println(arr[1])
 	arrByValTransform(arr)
 	fmt.Println(arr[1])
+
+	/*
+		切片的创建
+	*/
+
+	// 先定义一个数组
+	var myArray [10]int = [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} // 基于数组创建一个数组切片
+	var mySlice []int = myArray[:5]                              // 取数组前五个元素
+	fmt.Println("Elements of myArray: ")
+	for _, val := range mySlice {
+		fmt.Println(val)
+	}
+
+	//直接创建一个初始长度为5的切片
+	//mySlice2 := make([]int,5)
+
+	//创建一个初始元素个数为5的数组切片，元素初始值为0，并预留10个元素的存储空间:
+	//mySlice3 := make([]int, 5, 10)
+
+	//直接创建并初始化包含5个元素的数组切片:
+	mySlice4 := []int{1, 2, 3, 4, 5}
+	mySlice5 := []int{1, 3}
+
+	//如果需要往向mySlice4已包含的5个元素后面继续新增元素，
+	//可以使用append()函数。 下面的代码可以从尾端给mySlice加上3个元素，从而生成一个新的数组切片:
+	mySlice = append(mySlice4, 1, 2, 3)
+	fmt.Println("before", mySlice)
+
+	//向mySlice4中追加mySlice5中的元素
+	mySlice = append(mySlice, mySlice5...)
+	fmt.Println("after", mySlice)
+
+	//元素复制
+	slice1 := []int{1, 2, 3, 4, 5}
+	slice2 := []int{5, 4, 3}
+	//copy(slice2, slice1) // 只会复制slice1的前3个元素到slice2中
+	fmt.Println(slice2)
+	copy(slice1, slice2) // 只会复制slice2的3个元素到slice1的前3个位置
+	fmt.Println(slice1)
+
+	/*
+		map 的创建
+	*/
+
+	//var personDB map[string] PersonInfo
+	//personDB = make(map[string] PersonInfo)
+	//personDB = map[string]PersonInfo{
+	//	"1234": PersonInfo{"1", "Jack", "Room 101,..."},
+	//}
+	personDB := make(map[string]PersonInfo)
+	// 往这个map里插入几条数据
+	personDB["12345"] = PersonInfo{"12345", "Tom", "Room 203,..."}
+	personDB["1"] = PersonInfo{"1", "Jack", "Room 101,..."}
+
+	// 从这个map查找键为"1234"的信息
+	person, ok := personDB["1234"]
+	if ok {
+		fmt.Println(person)
+	} else {
+		fmt.Println("Not exist 1234")
+	}
+
+	/*
+		map 元素删除
+	*/
+	delete(personDB, "1")
+	fmt.Println(personDB)
 }
 func arrByPtrTransform(arr *[10]int) {
 	arr[1] = 4
