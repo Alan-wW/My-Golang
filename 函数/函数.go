@@ -22,11 +22,11 @@ func add(x int, y int) int {
 
 //不定参数 ...type实质是一个切片
 func addArgs(args ...int) int {
-	sum := 0
+	sums := 0
 	for _, val := range args {
-		sum += val
+		sums += val
 	}
-	return sum
+	return sums
 }
 
 //任意类型的不定参数
