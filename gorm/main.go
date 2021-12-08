@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"time"
 )
 
 type User struct {
@@ -106,4 +107,45 @@ func main() {
 	// 主键切片条件	SELECT * FROM users WHERE id IN (20, 21, 22);
 	db.Where([]int64{20, 21, 22}).Find(&users)
 
+	/*
+		选择特定字段查询
+	*/
+	// SELECT name, age FROM users;
+	db.Select("name", "age").Find(&users)
+
+	// SELECT name, age FROM users;
+	db.Select([]string{"name", "age"}).Find(&users)
+
+	// SELECT COALESCE(age,'42') FROM users;
+	db.Table("users").Select("COALESCE(age,?)", 42).Rows()
+
+	/*
+		按字段排序
+	*/
+
+	// SELECT * FROM users ORDER BY age desc, name;
+	db.Order("age desc, name").Find(&users)
+
+	/*
+		Limit
+	*/
+
+	// SELECT * FROM users LIMIT 3;
+	db.Limit(3).Find(&users)
+
+	/*
+		去重
+	*/
+	db.Distinct("name", "age").Order("name, age desc").Find(&users)
+
+	/*
+		group by
+	*/
+	type result struct {
+		Date  time.Time
+		Total int
+	}
+	var results result
+	db.Model(&User{}).Select("name, sum(age) as total").Group("name").Having("name = ?", "group").Find(&results)
+	// SELECT name, sum(age) as total FROM `users` GROUP BY `name` HAVING name = "group"
 }
